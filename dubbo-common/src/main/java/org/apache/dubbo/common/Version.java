@@ -16,11 +16,6 @@
  */
 package org.apache.dubbo.common;
 
-import org.apache.dubbo.common.logger.Logger;
-import org.apache.dubbo.common.logger.LoggerFactory;
-import org.apache.dubbo.common.utils.ClassHelper;
-import org.apache.dubbo.common.utils.StringUtils;
-
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Enumeration;
@@ -28,6 +23,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.dubbo.common.logger.Logger;
+import org.apache.dubbo.common.logger.LoggerFactory;
+import org.apache.dubbo.common.utils.ClassHelper;
+import org.apache.dubbo.common.utils.StringUtils;
 
 /**
  * Version
@@ -46,7 +46,7 @@ public final class Version {
      * performance than string.
      */
     private static final int LOWEST_VERSION_FOR_RESPONSE_ATTACHMENT = 2000200; // 2.0.2
-    private static final Map<String, Integer> VERSION2INT = new HashMap<String, Integer>();
+    private static final Map<String, Integer> VERSION2INT = new HashMap<>();
 
     static {
         // check if there's duplicated jar
@@ -89,7 +89,7 @@ public final class Version {
     }
 
     public static boolean isSupportResponseAttachment(String version) {
-        if (version == null || version.length() == 0) {
+        if (version == null || version.length() == 0 || version.startsWith("2.5.4-lo")) {
             return false;
         }
         // for previous dubbo version(2.0.10/020010~2.6.2/020602), this version is the jar's version, so they need to
@@ -208,7 +208,7 @@ public final class Version {
         try {
             // search in caller's classloader
             Enumeration<URL> urls = ClassHelper.getCallerClassLoader(Version.class).getResources(path);
-            Set<String> files = new HashSet<String>();
+            Set<String> files = new HashSet<>();
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
                 if (url != null) {
