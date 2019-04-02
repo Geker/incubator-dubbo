@@ -18,7 +18,6 @@ package org.apache.dubbo.common.version;
 
 
 import org.apache.dubbo.common.Version;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,6 +44,10 @@ public class VersionTest {
     }
 
     @Test
+    public void testGetIntVersionSpecial() {
+        Assertions.assertEquals(2050400, Version.getIntVersion("2.5.4-lo-002.RELEASE"));
+    }
+    @Test
     public void testIsFramework270OrHigher() {
         Assertions.assertTrue(Version.isRelease270OrHigher("2.7.0"));
         Assertions.assertTrue(Version.isRelease270OrHigher("2.7.0.1"));
@@ -62,5 +65,6 @@ public class VersionTest {
         Assertions.assertFalse(Version.isRelease263OrHigher("2.6.2"));
         Assertions.assertFalse(Version.isRelease263OrHigher("2.6.1.1"));
         Assertions.assertTrue(Version.isRelease263OrHigher("2.6.3"));
+
     }
 }

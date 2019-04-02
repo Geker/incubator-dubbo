@@ -16,11 +16,6 @@
  */
 package org.apache.dubbo.common;
 
-import org.apache.dubbo.common.logger.Logger;
-import org.apache.dubbo.common.logger.LoggerFactory;
-import org.apache.dubbo.common.utils.ClassHelper;
-import org.apache.dubbo.common.utils.StringUtils;
-
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -32,12 +27,17 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.dubbo.common.logger.Logger;
+import org.apache.dubbo.common.logger.LoggerFactory;
+import org.apache.dubbo.common.utils.ClassHelper;
+import org.apache.dubbo.common.utils.StringUtils;
+
 /**
  * Version
  */
 public final class Version {
     private static final Logger logger = LoggerFactory.getLogger(Version.class);
-    
+
     private static final Pattern PREFIX_DIGITS_PATTERN = Pattern.compile("^([0-9]*).*");
 
     // Dubbo RPC protocol version, for compatibility, it must not be between 2.0.10 ~ 2.6.2
@@ -51,7 +51,7 @@ public final class Version {
      * performance than string.
      */
     private static final int LOWEST_VERSION_FOR_RESPONSE_ATTACHMENT = 2000200; // 2.0.2
-    private static final Map<String, Integer> VERSION2INT = new HashMap<String, Integer>();
+    private static final Map<String, Integer> VERSION2INT = new HashMap<>();
 
     static {
         // check if there's duplicated jar
@@ -108,6 +108,8 @@ public final class Version {
     }
 
     public static int getIntVersion(String version) {
+        if (version.startsWith("2.5.4") || version.contains("-"))
+            version = "2.5.4";// 防止不正常的版本
         Integer v = VERSION2INT.get(version);
         if (v == null) {
             v = parseInt(version);
@@ -157,19 +159,19 @@ public final class Version {
                     return version;
                 }
             }
-            
+
             // guess version fro jar file name if nothing's found from MANIFEST.MF
             CodeSource codeSource = cls.getProtectionDomain().getCodeSource();
             if (codeSource == null) {
                 logger.info("No codeSource for class " + cls.getName() + " when getVersion, use default version " + defaultVersion);
                 return defaultVersion;
-            } 
-            
+            }
+
             String file = codeSource.getLocation().getFile();
             if (!StringUtils.isEmpty(file) && file.endsWith(".jar")) {
                 version = getFromFile(file);
             }
-            
+
             // return default version if no version info is found
             return StringUtils.isEmpty(version) ? defaultVersion : version;
         } catch (Throwable e) {
@@ -185,19 +187,19 @@ public final class Version {
     private static String getFromFile(String file) {
         // remove suffix ".jar": "path/to/group-module-x.y.z"
         file = file.substring(0, file.length() - 4);
-        
+
         // remove path: "group-module-x.y.z"
         int i = file.lastIndexOf('/');
         if (i >= 0) {
             file = file.substring(i + 1);
         }
-        
+
         // remove group: "module-x.y.z"
         i = file.indexOf("-");
         if (i >= 0) {
             file = file.substring(i + 1);
         }
-        
+
         // remove module: "x.y.z"
         while (file.length() > 0 && !Character.isDigit(file.charAt(0))) {
             i = file.indexOf("-");
@@ -241,7 +243,7 @@ public final class Version {
      */
     private static Set<String> getResources(String path) throws IOException {
         Enumeration<URL> urls = ClassHelper.getCallerClassLoader(Version.class).getResources(path);
-        Set<String> files = new HashSet<String>();
+        Set<String> files = new HashSet<>();
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
             if (url != null) {
