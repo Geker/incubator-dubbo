@@ -76,7 +76,19 @@
         </profile>
     </profiles>
 
-
+	<distributionManagement>
+		<!-- 发布releases -->
+		<repository>
+			<id>ufo-releases</id>
+			<url>http://10.60.80.54:30000/nexus/content/repositories/releases/</url>
+		</repository>
+		<!-- 发布snapshots -->
+		<snapshotRepository>
+			<id>ufo-snapshots</id>
+			<url>http://10.60.80.54:30000/nexus/content/repositories/snapshots/</url>
+			<uniqueVersion>true</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
   <scm>
     <tag>dubbo-2.7.51</tag>
   </scm>
