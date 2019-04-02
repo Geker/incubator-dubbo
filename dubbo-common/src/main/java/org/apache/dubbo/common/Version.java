@@ -108,7 +108,7 @@ public final class Version {
     }
 
     public static int getIntVersion(String version) {
-        if (version.startsWith("2.5.4") || version.contains("-"))
+        if (version.startsWith("2.5.4") ||version.startsWith("2.5.3")|| version.contains("lo"))
             version = "2.5.4";// 防止不正常的版本
         Integer v = VERSION2INT.get(version);
         if (v == null) {

@@ -34,6 +34,11 @@ public class VersionTest {
         Assertions.assertTrue(Version.isSupportResponseAttachment("2.0.3"));
         Assertions.assertFalse(Version.isSupportResponseAttachment("2.0.0"));
     }
+    @Test
+    public void testSupportResponseAttachmentSpecial() {
+        Assertions.assertTrue(Version.isSupportResponseAttachment("2.7.1-SNAPSHOT"));
+
+    }
 
     @Test
     public void testGetIntVersion() {
@@ -41,6 +46,7 @@ public class VersionTest {
         Assertions.assertEquals(2060101, Version.getIntVersion("2.6.1.1"));
         Assertions.assertEquals(2070001, Version.getIntVersion("2.7.0.1"));
         Assertions.assertEquals(2070000, Version.getIntVersion("2.7.0"));
+
     }
 
     @Test
