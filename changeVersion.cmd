@@ -1,0 +1,1 @@
+sed -i "s/2.7.2-SNAPSHOT/2.7.52-SNAPSHOT/g"  pom.xml   dubbo-dependencies-bom\pom.xml   dubbo-dependencies\dubbo- dependencies-zookeeper\pom.xml

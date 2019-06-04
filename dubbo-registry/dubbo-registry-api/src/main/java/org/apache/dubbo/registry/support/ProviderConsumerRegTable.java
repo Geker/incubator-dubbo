@@ -48,14 +48,16 @@ public class ProviderConsumerRegTable {
         return wrapperInvoker;
     }
 
-    /*public static ProviderInvokerWrapper removeProviderWrapper(Invoker invoker, URL providerUrl) {
-        String serviceUniqueName = providerUrl.getServiceKey();
-        Set<ProviderInvokerWrapper> invokers = providerInvokers.get(serviceUniqueName);
-        if (invokers == null) {
-            return null;
-        }
-        return invokers.remove(new ProviderIndvokerWrapper(invoker, null, null));
-    }*/
+    /*
+     * public static ProviderInvokerWrapper removeProviderWrapper(Invoker invoker, URL providerUrl) {
+     * String serviceUniqueName = providerUrl.getServiceKey();
+     * Set<ProviderInvokerWrapper> invokers = providerInvokers.get(serviceUniqueName);
+     * if (invokers == null) {
+     * return null;
+     * }
+     * return invokers.remove(new ProviderIndvokerWrapper(invoker, null, null));
+     * }
+     */
 
     public static Set<ProviderInvokerWrapper> getProviderInvoker(String serviceUniqueName) {
         ConcurrentMap<Invoker, ProviderInvokerWrapper> invokers = providerInvokers.get(serviceUniqueName);
@@ -102,11 +104,21 @@ public class ProviderConsumerRegTable {
         return providerInvokerWrapperSet.stream().anyMatch(ProviderInvokerWrapper::isReg);
     }
 
+    public static void removeConsumerInvokerWrapper(Invoker invoker) {
+
+        Set<ConsumerInvokerWrapper> invokerSets = consumerInvokers.get(invoker.getUrl().getServiceKey());
+        ConsumerInvokerWrapper tobeDel = null;
+        for (ConsumerInvokerWrapper ciw : invokerSets) {
+            if (ciw.getInvoker().equals(invoker)) {
+                tobeDel = ciw;
+            }
+        }
+        invokerSets.remove(tobeDel);
+     }
+
     public static int getConsumerAddressNum(String serviceUniqueName) {
         Set<ConsumerInvokerWrapper> providerInvokerWrapperSet = ProviderConsumerRegTable.getConsumerInvoker(serviceUniqueName);
-        return providerInvokerWrapperSet.stream()
-                .map(w -> w.getRegistryDirectory().getUrlInvokerMap())
-                .filter(Objects::nonNull)
-                .mapToInt(Map::size).sum();
+        return providerInvokerWrapperSet.stream().map(w -> w.getRegistryDirectory().getUrlInvokerMap()).filter(Objects::nonNull)
+            .mapToInt(Map::size).sum();
     }
 }

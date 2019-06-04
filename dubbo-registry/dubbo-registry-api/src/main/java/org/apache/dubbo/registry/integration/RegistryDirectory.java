@@ -194,6 +194,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             }
             DynamicConfiguration.getDynamicConfiguration()
                     .removeListener(ApplicationModel.getApplication(), CONSUMER_CONFIGURATION_LISTENER);
+            CONSUMER_CONFIGURATION_LISTENER.removeNotifyListener(this);
         } catch (Throwable t) {
             logger.warn("unexpected error when unsubscribe service " + serviceKey + "from registry" + registry.getUrl(), t);
         }
@@ -735,6 +736,9 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
         @Override
         protected void notifyOverrides() {
             listeners.forEach(listener -> listener.refreshInvoker(Collections.emptyList()));
+        }
+        void removeNotifyListener(RegistryDirectory listener) {
+            this.listeners.remove(listener);
         }
     }
 
